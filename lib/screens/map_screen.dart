@@ -6,7 +6,11 @@ import '../models/place_location.dart';
 
 class MapScreen extends StatefulWidget {
   final PlaceLocation location;
-  const MapScreen({super.key, this.location = const PlaceLocation(latitude: 41.311081, longitude: 69.240562, address: '')});
+
+  const MapScreen(
+      {super.key,
+      this.location = const PlaceLocation(
+          latitude: 41.311081, longitude: 69.240562, address: '')});
 
   @override
   State<MapScreen> createState() => _MapScreenState();
@@ -17,7 +21,39 @@ class _MapScreenState extends State<MapScreen> {
   LatLng? _pickedLocation;
   Map<String, dynamic>? _dataFromAPI;
   String? _selectedSphere; // Variable to hold the selected sphere
-  List<String> spheres = ['Restaurant', 'Retail', 'Technology']; // Example spheres, replace with your own
+  List<String> spheres = [
+    "Автомобили",
+    "Административные учреждения",
+    "Бизнес услуги",
+    "Бытовая техника",
+    "Дипломатический корпус",
+    "ИТ-рынок",
+    "Коммунальные услуги",
+    "Культура и искусство",
+    "Мебель",
+    "Медицина",
+    "Научные учреждения",
+    "Недвижимость",
+    "Оборудование",
+    "Образование",
+    "Общественная безопасность",
+    "Общественные объединения",
+    "Отдых и развлечения",
+    "Промышленность",
+    "Рестораны и кафе",
+    "СМИ",
+    "Сельское хозяйство",
+    "Снабжение",
+    "Строительство и ремонт",
+    "Телекоммуникация и связь",
+    "Товары",
+    "Торговля",
+    "Транспорт",
+    "Услуги населению",
+    "Физическая культура и спорт",
+    "Финансы",
+    "Юридические услуги",
+  ]; // Example spheres, replace with your own
 
   void _selectLocation(LatLng position) {
     setState(() {
@@ -39,7 +75,8 @@ class _MapScreenState extends State<MapScreen> {
       return;
     }
 
-    var url = Uri.parse('https://enigmatic-earth-88985-54b0ffead0e6.herokuapp.com/get_data');
+    var url = Uri.parse(
+        'https://enigmatic-earth-88985-54b0ffead0e6.herokuapp.com/get_data');
     try {
       var response = await http.post(
         url,
@@ -58,10 +95,12 @@ class _MapScreenState extends State<MapScreen> {
         });
         _showModalBottomSheet();
       } else {
-        _showErrorDialog('Error: Server responded with status code ${response.statusCode}.');
+        _showErrorDialog(
+            'Error: Server responded with status code ${response.statusCode}.');
       }
     } catch (e) {
-      _showErrorDialog('Error: Unable to reach the server. Please try again later.');
+      _showErrorDialog(
+          'Error: Unable to reach the server. Please try again later.');
     }
   }
 
@@ -95,7 +134,8 @@ class _MapScreenState extends State<MapScreen> {
             itemCount: _dataFromAPI!.length,
             itemBuilder: (ctx, index) {
               String key = _dataFromAPI!.keys.elementAt(index);
-              String successRate = _dataFromAPI![key] as String; // Assuming the value is a double
+              double successRate =
+                  _dataFromAPI![key] as double; // Assuming the value is a double
 
               // Use the custom widget to display the sphere and success rate
               return BusinessSphereCard(sphere: key, successRate: successRate);
@@ -110,11 +150,12 @@ class _MapScreenState extends State<MapScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Map Screen'),
+        title: const Text(''),
         actions: [
           DropdownButton<String>(
             value: _selectedSphere,
-            hint: const Text('Select Sphere', style: TextStyle(color: Colors.white)),
+            hint: const Text('Select Sphere',
+                style: TextStyle(color: Colors.white)),
             onChanged: (newValue) {
               setState(() {
                 _selectedSphere = newValue;
@@ -146,10 +187,9 @@ class _MapScreenState extends State<MapScreen> {
   }
 }
 
-
 class BusinessSphereCard extends StatelessWidget {
   final String sphere;
-  final String successRate;
+  final double successRate;
 
   const BusinessSphereCard({
     Key? key,
@@ -179,7 +219,7 @@ class BusinessSphereCard extends StatelessWidget {
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
                 Text(
-                  '$successRate%',
+                  '${successRate.toStringAsFixed(2)}%',
                   style: const TextStyle(fontSize: 16),
                 ),
               ],
